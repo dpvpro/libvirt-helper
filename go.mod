@@ -1,4 +1,4 @@
-module dev-vm-helper
+module libvirt-helper
 
 // debian 12 compatibility
 go 1.19
