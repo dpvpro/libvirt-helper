@@ -204,35 +204,35 @@ func VirtualMachineResume(vm string) {
 
 func VirtualMachinesIps() {
 
-	AllDomains, err := libvirtInstance.ListAllDomains(libvirt.CONNECT_LIST_DOMAINS_ACTIVE)
+	var OutputString strings.Builder
+
+	AllDomains, err := libvirtInstance.ListAllDomains(libvirt.CONNECT_LIST_DOMAINS_RUNNING)
 	herr(err)
-	fmt.Println(AllDomains)
-	OutputString := fmt.Sprintf("There are %d active domains:", len(AllDomains))
-	fmt.Println(OutputString)
+	// fmt.Println(AllDomains)
+	fmt.Fprintf(&OutputString, "There are %d running domains:\n", len(AllDomains))
 
 	for _, domain := range AllDomains {
 		DomainName, err := domain.GetName()
-		fmt.Printf("Domain - %s:\n", DomainName)
+		fmt.Fprintf(&OutputString, "Domain - %s:\n", DomainName)
 		herr(err)
-		// if DomainName != "debian-work" {
-		// 	continue
-		// }
 
 		AllDomainInterfaces, err := domain.ListAllInterfaceAddresses(libvirt.DOMAIN_INTERFACE_ADDRESSES_SRC_AGENT)
 		herr(err)
 		// fmt.Printf("All interfaces for domain %s - %v, Type - %T\n", DomainName, AllDomainInterfaces, AllDomainInterfaces)
 		for _, DomainInterfaceEntry := range AllDomainInterfaces {
-			var AllAddrs string
-			for _, val := range DomainInterfaceEntry.Addrs {
-				AllAddrs += val.Addr + " "
+		    fmt.Fprintf(&OutputString, "interface - %v, address - ", DomainInterfaceEntry.Name)
+		    for _, val := range DomainInterfaceEntry.Addrs {
+				fmt.Fprintf(&OutputString, val.Addr)
+				fmt.Fprintf(&OutputString, " ")
 			}
-			OutputString := fmt.Sprintf("interface - %v, address - %v", DomainInterfaceEntry.Name, AllAddrs)
-			fmt.Println(OutputString)
+			fmt.Fprintf(&OutputString,"\n")
+			// OutputString := fmt.Sprintf("interface - %v, address - %v", DomainInterfaceEntry.Name, AllAddrs.String())
 			// fmt.Printf("Domain - %s, interface - %v, ip address - %v\n",
 			//   DomainName, DomainInterfaceEntry.Name, DomainInterfaceEntry.Addrs[0].Addr)
 		}
 		domain.Free()
 	}
+	fmt.Print(OutputString.String())
 }
 
 func VirtualMachinesStateAll() {
