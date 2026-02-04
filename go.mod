@@ -4,6 +4,6 @@ module libvirt-helper
 go 1.19
 
 require (
-	github.com/spf13/pflag v1.0.6
-	libvirt.org/go/libvirt v1.11001.0
+	github.com/spf13/pflag v1.0.10
+	libvirt.org/go/libvirt v1.11010.0
 )
