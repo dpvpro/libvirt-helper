@@ -254,7 +254,7 @@ func PrintVirtualMachinesStatus(domains []libvirt.Domain) {
 		DomainName, err := domain.GetName()
 		herr(err)
 		VmState := GetVirtualMachineStateInfo(DomainName)
-		fmt.Printf("%v\n, %v\n", DomainName, VmState.State)
+		fmt.Printf("%-30v %-15v\n", DomainName, VmState.State)
 	}
 }
 
