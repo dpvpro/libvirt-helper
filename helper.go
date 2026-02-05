@@ -37,6 +37,9 @@ type VirtualMachineStateInfo struct {
 // var virshVersion = *pflag.Bool("virsh-version", false, "Returns result with version of virsh populated")
 // var tarsvirtVersion = *pflag.Bool("tarsvirt-version", false, "Returns result with version of tarsvirt populated")
 
+var vm = pflag.String("vm", "", "vm of the machine to work with")
+var xmlTemplate = pflag.String("xml-template", "", "path to an xml template file that describes a machine. See qemu docs on xml templates.")
+
 // VirtualMachine commands
 var virtualMachineState = pflag.Bool("state", false, "Returns result with a current machine state")
 var virtualMachineSoftReboot = pflag.Bool("soft-reboot", false, "reboots a machine gracefully, as chosen by hypervisor. Returns result with a current machine state")
@@ -50,9 +53,6 @@ var virtualMachineCreate = pflag.Bool("create", false, "creates a new machine. R
 var virtualMachineDelete = pflag.Bool("delete", false, "deletes an existing machine.")
 var virtualMachinesIps = pflag.Bool("ips", false, "show ip addresses vm on host.")
 var virtualMachinesStateAll = pflag.Bool("show-all", false, "show status all vms on host.")
-
-var vm = pflag.String("vm", "", "vm of the machine to work with")
-var xmlTemplate = pflag.String("xml-template", "", "path to an xml template file that describes a machine. See qemu docs on xml templates.")
 
 var libvirtInstance *libvirt.Connect
 
@@ -220,12 +220,12 @@ func VirtualMachinesIps() {
 		herr(err)
 		// fmt.Printf("All interfaces for domain %s - %v, Type - %T\n", DomainName, AllDomainInterfaces, AllDomainInterfaces)
 		for _, DomainInterfaceEntry := range AllDomainInterfaces {
-		    fmt.Fprintf(&OutputString, "interface - %v, address - ", DomainInterfaceEntry.Name)
-		    for _, val := range DomainInterfaceEntry.Addrs {
+			fmt.Fprintf(&OutputString, "interface - %v, address - ", DomainInterfaceEntry.Name)
+			for _, val := range DomainInterfaceEntry.Addrs {
 				fmt.Fprintf(&OutputString, val.Addr)
 				fmt.Fprintf(&OutputString, " ")
 			}
-			fmt.Fprintf(&OutputString,"\n")
+			fmt.Fprintf(&OutputString, "\n")
 			// OutputString := fmt.Sprintf("interface - %v, address - %v", DomainInterfaceEntry.Name, AllAddrs.String())
 			// fmt.Printf("Domain - %s, interface - %v, ip address - %v\n",
 			//   DomainName, DomainInterfaceEntry.Name, DomainInterfaceEntry.Addrs[0].Addr)
